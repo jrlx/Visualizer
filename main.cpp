@@ -4,10 +4,12 @@
 #include <imgui-SFML.h>
 #include <iostream>
 #include <memory>
+#include <nfd.hpp>
 #include "AudioPlayer.h"
 #include "Visualizer.h"
 #include "WaveformVisualizer.h"
 #include "UIManager.h"
+#include "HighDpi.h"
 
 class Application {
 private:
@@ -20,6 +22,10 @@ public:
     // to initalize the window
     Application() : window(sf::VideoMode(800, 600), "Music Visualizer") {
         ImGui::SFML::Init(window); // connects imgui with sfml
+        
+        // High DPI Support
+        SetDPIAwareness(window);
+
         // Initialize default visualizer
         visualizer = std::make_unique<WaveformVisualizer>();
     }
@@ -43,7 +49,7 @@ public:
             ImGui::SFML::Update(window, deltaClock.restart());
 
             // Render UI
-            uiManager.render(audioPlayer);
+            uiManager.render(audioPlayer, window);
 
             // Update visualization
             visualizer->update(audioPlayer);
@@ -57,6 +63,10 @@ public:
 };
 
 int main() {
+
+    // Initialize NFD
+    NFD::Guard();
+
     // creating an instance of applicaiton
     try {
         Application app;
@@ -66,5 +76,6 @@ int main() {
         std::cerr << "Application Error: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
+
     return EXIT_SUCCESS;
 }

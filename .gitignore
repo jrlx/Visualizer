@@ -1,0 +1,8 @@
+# Ignore build directory
+build/
+
+# Ignore vscode config
+.vscode/
+
+# Ignore imgui.ini
+imgui.ini

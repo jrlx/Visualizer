@@ -1,10 +1,32 @@
 #include "UIManager.h"
+#include <SFML/Graphics.hpp>
 #include <imgui.h>
+#include <string>
+#include "FileDialog.h"
 
-void UIManager::render(AudioPlayer& audioPlayer) {
-    ImGui::Begin("Audio Controls");
+void UIManager::render(AudioPlayer &audioPlayer, sf::RenderWindow &window) {
 
     static char filepath[128] = "";
+
+    // Menu bar
+    if (ImGui::BeginMainMenuBar()) {
+        if (ImGui::BeginMenu("File")) {
+            if (ImGui::MenuItem("Open")) {
+                std::string path = FileDialog::OpenFile();
+                // Set "filepath" to acquired path
+                path.copy(filepath, sizeof(filepath), 0);
+            }
+            if (ImGui::MenuItem("Exit")) {
+                window.close();
+            }
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
+
+    // Audio Controls
+    ImGui::Begin("Audio Controls");
+
     ImGui::InputText("Audio File", filepath, IM_ARRAYSIZE(filepath));
 
     if (ImGui::Button("Load")) {
