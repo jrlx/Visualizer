@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <imgui.h>
 #include <string>
+#include <algorithm>
 #include "FileDialog.h"
 
 void UIManager::render(AudioPlayer &audioPlayer, sf::RenderWindow &window) {
@@ -15,6 +16,7 @@ void UIManager::render(AudioPlayer &audioPlayer, sf::RenderWindow &window) {
                 std::string path = FileDialog::OpenFile();
                 // Set "filepath" to acquired path
                 path.copy(filepath, sizeof(filepath), 0);
+                std::fill_n(filepath + path.size(), sizeof(filepath) - path.size(), '\0');
             }
             if (ImGui::MenuItem("Exit")) {
                 window.close();
